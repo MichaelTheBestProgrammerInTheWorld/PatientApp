@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Toast;
 
+import static com.michaelmagdy.patientapp.ui.home.HomeFragment.CURRENT_PREF_KEY;
 import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.MY_PREFS_NAME;
 import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.USERNAME_PREF_KEY;
 

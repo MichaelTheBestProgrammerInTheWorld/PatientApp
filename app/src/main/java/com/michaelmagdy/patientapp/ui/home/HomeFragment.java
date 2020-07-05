@@ -36,6 +36,8 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private int patientArrayLength = 0;
+    private SharedPreferences.Editor editor;
+    public static final String CURRENT_PREF_KEY = "currentNum";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class HomeFragment extends Fragment {
         final EditText emailEdt = root.findViewById(R.id.email_edt);
         final RadioGroup sexGroup = root.findViewById(R.id.radio_group);
         final ListView patientList = root.findViewById(R.id.patient_list);
+        editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -62,6 +65,8 @@ public class HomeFragment extends Fragment {
                         android.R.layout.simple_list_item_1, strings);
                 patientList.setAdapter(arrayAdapter);
                 patientArrayLength = strings.length;
+                editor.putInt(CURRENT_PREF_KEY, patientArrayLength);
+                editor.apply();
             }
         });
 
@@ -97,5 +102,18 @@ public class HomeFragment extends Fragment {
             maxNum = 5;
         }
         return maxNum;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        if (prefs.contains(CURRENT_PREF_KEY)) {
+            prefs.edit().remove(CURRENT_PREF_KEY).apply();
+
+        } else {
+
+        }
     }
 }

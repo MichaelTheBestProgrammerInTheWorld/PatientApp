@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.michaelmagdy.patientapp.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.michaelmagdy.patientapp.ui.home.HomeFragment.CURRENT_PREF_KEY;
 
 public class SettingsFragment extends Fragment {
 
@@ -28,8 +29,9 @@ public class SettingsFragment extends Fragment {
     public static final String USERNAME_PREF_KEY = "username";
     public static final String MAX_PREF_KEY = "maxNum";
     private SettingsViewModel galleryViewModel;
-    private EditText usernameEdt, maxNumEdt;
+    private EditText usernameEdt, maxNumEdt,currentNumEdt;
     private int maxNum = 5;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class SettingsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
         usernameEdt = root.findViewById(R.id.username_edt);
         maxNumEdt = root.findViewById(R.id.max_num_edt);
-        final EditText currentNumEdt = root.findViewById(R.id.current_num_edt);
+        currentNumEdt = root.findViewById(R.id.current_num_edt);
 
         getSavedValues();
 
@@ -84,6 +86,9 @@ public class SettingsFragment extends Fragment {
             maxNumEdt.setText(String.valueOf(maxNum));
         } else {
             maxNumEdt.setText(String.valueOf(maxNum));
+        }
+        if (prefs.contains(CURRENT_PREF_KEY)) {
+            currentNumEdt.setText(String.valueOf(prefs.getInt(CURRENT_PREF_KEY, 0)));
         }
     }
 }
