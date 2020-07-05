@@ -1,5 +1,6 @@
 package com.michaelmagdy.patientapp.ui.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -25,9 +27,15 @@ import com.michaelmagdy.patientapp.R;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.MAX_PREF_KEY;
+import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.MY_PREFS_NAME;
+import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.USERNAME_PREF_KEY;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private int patientArrayLength = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +61,7 @@ public class HomeFragment extends Fragment {
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
                         android.R.layout.simple_list_item_1, strings);
                 patientList.setAdapter(arrayAdapter);
+                patientArrayLength = strings.length;
             }
         });
 
@@ -60,16 +69,33 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String nameStr = nameEdt.getText().toString();
-                String ageStr = ageEdt.getText().toString();
-                String emailStr = emailEdt.getText().toString();
-                RadioButton radioButton = root.findViewById(sexGroup.getCheckedRadioButtonId());
-                String sexStr = radioButton.getText().toString();
-                homeViewModel.addPatient(nameStr, sexStr, Integer.parseInt(ageStr), emailStr);
+                if (patientArrayLength < getMaxNumFromSettings()){
+                    String nameStr = nameEdt.getText().toString();
+                    String ageStr = ageEdt.getText().toString();
+                    String emailStr = emailEdt.getText().toString();
+                    RadioButton radioButton = root.findViewById(sexGroup.getCheckedRadioButtonId());
+                    String sexStr = radioButton.getText().toString();
+                    homeViewModel.addPatient(nameStr, sexStr, Integer.parseInt(ageStr), emailStr);
+                } else {
+                    Toast.makeText(getContext(), "you exceeded max number of patients",
+                            Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
 
         return root;
+    }
+
+    private int getMaxNumFromSettings(){
+
+        int maxNum;
+        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        if (prefs.contains(MAX_PREF_KEY)) {
+            maxNum = prefs.getInt(MAX_PREF_KEY, 5);
+        } else {
+            maxNum = 5;
+        }
+        return maxNum;
     }
 }

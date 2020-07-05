@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkUsername(){
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        //int idName = prefs.getInt("idName", 0);
-
         if (prefs.contains(USERNAME_PREF_KEY)) {
             String username = prefs.getString(USERNAME_PREF_KEY, null);
             Toast.makeText(this, "Hi again, " + username, Toast.LENGTH_SHORT).show();
