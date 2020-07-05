@@ -56,4 +56,10 @@ public class HomeViewModel extends ViewModel {
         countLiveData.setValue(patientRows);
 
     }
+
+    public void clearData(){
+        patientArrayList.clear();
+        patientRows = new String[0];
+        countLiveData.setValue(patientRows);
+    }
 }

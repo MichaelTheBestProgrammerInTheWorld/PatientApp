@@ -6,8 +6,10 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,6 +32,7 @@ import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.USERNAME_
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private static OnResetListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                mListener.onReset();
+                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                prefs.edit().clear().apply();
+                return true;
+            }
+        });
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
@@ -85,5 +105,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
+    }
+
+    public static void setOnResetListener(OnResetListener listener){
+        mListener = listener;
+    }
+
+    public interface OnResetListener {
+
+        void onReset();
     }
 }

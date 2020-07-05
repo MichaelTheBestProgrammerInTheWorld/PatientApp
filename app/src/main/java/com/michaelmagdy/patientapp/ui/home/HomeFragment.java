@@ -32,7 +32,7 @@ import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.MAX_PREF_
 import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.MY_PREFS_NAME;
 import static com.michaelmagdy.patientapp.ui.settings.SettingsFragment.USERNAME_PREF_KEY;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements MainActivity.OnResetListener {
 
     private HomeViewModel homeViewModel;
     private int patientArrayLength = 0;
@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
         final EditText emailEdt = root.findViewById(R.id.email_edt);
         final RadioGroup sexGroup = root.findViewById(R.id.radio_group);
         final ListView patientList = root.findViewById(R.id.patient_list);
+        MainActivity.setOnResetListener(this);
         editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -115,5 +116,11 @@ public class HomeFragment extends Fragment {
         } else {
 
         }
+    }
+
+    @Override
+    public void onReset() {
+
+        homeViewModel.clearData();
     }
 }
